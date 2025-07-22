@@ -1,4 +1,3 @@
-```jdl
 entity MoodEntry {
   date LocalDate required unique,
   mood MoodType required
@@ -19,4 +18,3 @@ relationship ManyToOne {
 paginate MoodEntry with pagination
 service MoodEntry with serviceClass
 dto MoodEntry with mapstruct
-```
