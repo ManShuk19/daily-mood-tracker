@@ -1,0 +1,22 @@
+```jdl
+entity MoodEntry {
+  date LocalDate required unique,
+  mood MoodType required
+}
+
+enum MoodType {
+  HAPPY,
+  SAD,
+  ANGRY,
+  NEUTRAL,
+  ANXIOUS
+}
+
+relationship ManyToOne {
+  MoodEntry{user(login) required} to User with builtInEntity
+}
+
+paginate MoodEntry with pagination
+service MoodEntry with serviceClass
+dto MoodEntry with mapstruct
+```

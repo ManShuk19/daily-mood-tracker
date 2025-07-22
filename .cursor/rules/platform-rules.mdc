@@ -1,0 +1,56 @@
+```json
+{
+  "name": "Daily Mood Logging Application",
+  "description": "Guides the AI to understand and generate code for a Daily Mood Logging application, focusing on user-friendly interface, data privacy, and insightful mood tracking.",
+  "triggers": [
+    {
+      "type": "file_extension",
+      "values": [".js", ".jsx", ".ts", ".tsx", ".py", ".java", ".html", ".css", ".sql"]
+    },
+    {
+      "type": "file_content",
+      "contains": ["mood", "emotion", "daily log", "well-being", "mental health", "mood history", "sentiment", "mood tracking", "user account", "timestamp"]
+    },
+    {
+      "type": "prompt_content",
+      "contains": ["log daily mood", "mood tracking application", "emotional well-being", "mood history", "track mood trends", "user account", "mood options", "chronological display"]
+    }
+  ],
+  "actions": [
+    {
+      "type": "set_context",
+      "context": {
+        "domain": "Personal Well-being Application",
+        "purpose": "Tracking user's daily mood and providing insights into emotional trends.",
+        "features": [
+          "User Account Creation and Management",
+          "Daily Mood Logging with Timestamp",
+          "Mood History Display (Chronological)",
+          "Predefined Mood Options (Happy, Sad, Angry, etc.)",
+          "Data Visualization (Charts/Graphs)",
+          "Password Reset Functionality",
+          "Secure Data Storage",
+          "Responsive Design for Multiple Devices"
+        ],
+        "target_audience": "Individuals interested in tracking their emotional well-being.",
+        "ui_ux_guidelines": {
+          "design_system": "Utilize a clean and intuitive design system (e.g., Material Design, Bootstrap) that promotes ease of use and visual appeal.",
+          "responsiveness": "Ensure the application is fully responsive and accessible on various devices (desktops, tablets, mobile phones).",
+          "interactivity": "Incorporate interactive elements such as mood selection buttons, date pickers, and dynamic charts to enhance user engagement.",
+          "data_visualization": "Use charts and graphs (e.g., line charts, bar charts) to visually represent mood trends over time, providing users with insights into their emotional patterns.",
+          "accessibility": "Adhere to accessibility guidelines (WCAG) to ensure the application is usable by individuals with disabilities.",
+          "user_flow": "Design a simple and intuitive user flow for logging mood and viewing mood history, minimizing the number of steps required.",
+          "performance": "Optimize the application for fast loading times and smooth performance, ensuring a seamless user experience.",
+          "feedback": "Provide clear and concise feedback to user actions, such as confirmation messages after logging mood or error messages for invalid input.",
+          "consistency": "Maintain consistent styling and behavior across all pages and components to create a cohesive user experience.",
+          "modern_aesthetics": "Employ modern UI patterns, a visually appealing color palette, and clear typography to create an engaging and user-friendly interface."
+        }
+      }
+    },
+    {
+        "type":"add_instruction",
+        "instruction":"When generating UI code or suggestions, prioritize a clean, intuitive, and visually appealing interface. Ensure responsiveness across devices and adherence to accessibility guidelines. Focus on creating a seamless user experience for logging mood and viewing mood history. When generating backend code, focus on data security, efficient storage, and accurate timestamping of mood entries."
+    }
+  ]
+}
+```
