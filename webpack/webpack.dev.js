@@ -2,7 +2,6 @@ const webpackMerge = require('webpack-merge').merge;
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
 // const WebpackNotifierPlugin = require('webpack-notifier'); // Disabled due to ENAMETOOLONG on Windows
-const path = require('path');
 const sass = require('sass');
 
 const utils = require('./utils.js');
