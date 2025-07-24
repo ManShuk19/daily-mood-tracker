@@ -1,13 +1,18 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.MoodEntry;
+import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.repository.MoodEntryRepository;
+import com.mycompany.myapp.repository.UserRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.dto.MoodEntryDTO;
 import com.mycompany.myapp.service.mapper.MoodEntryMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +30,12 @@ public class MoodEntryService {
 
     private final MoodEntryMapper moodEntryMapper;
 
-    public MoodEntryService(MoodEntryRepository moodEntryRepository, MoodEntryMapper moodEntryMapper) {
+    private final UserRepository userRepository;
+
+    public MoodEntryService(MoodEntryRepository moodEntryRepository, MoodEntryMapper moodEntryMapper, UserRepository userRepository) {
         this.moodEntryRepository = moodEntryRepository;
         this.moodEntryMapper = moodEntryMapper;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -39,6 +47,10 @@ public class MoodEntryService {
     public MoodEntryDTO save(MoodEntryDTO moodEntryDTO) {
         LOG.debug("Request to save MoodEntry : {}", moodEntryDTO);
         MoodEntry moodEntry = moodEntryMapper.toEntity(moodEntryDTO);
+
+        // Automatically assign the current user to the mood entry
+        SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin).ifPresent(moodEntry::setUser);
+
         moodEntry = moodEntryRepository.save(moodEntry);
         return moodEntryMapper.toDto(moodEntry);
     }
@@ -117,5 +129,36 @@ public class MoodEntryService {
     public void delete(Long id) {
         LOG.debug("Request to delete MoodEntry : {}", id);
         moodEntryRepository.deleteById(id);
+    }
+
+    /**
+     * Get all mood entries for the current user.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<MoodEntryDTO> findAllForCurrentUser(Pageable pageable) {
+        LOG.debug("Request to get all MoodEntries for current user");
+        List<MoodEntry> moodEntries = moodEntryRepository.findByUserIsCurrentUser();
+        List<MoodEntryDTO> dtos = moodEntries.stream().map(moodEntryMapper::toDto).toList();
+
+        // Apply pagination manually
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), dtos.size());
+        List<MoodEntryDTO> pagedDtos = dtos.subList(start, Math.min(start + pageable.getPageSize(), dtos.size()));
+
+        return new PageImpl<>(pagedDtos, pageable, dtos.size());
+    }
+
+    /**
+     * Get all mood entries for the current user (no pagination).
+     *
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<MoodEntryDTO> findAllForCurrentUser() {
+        LOG.debug("Request to get all MoodEntries for current user");
+        return moodEntryRepository.findByUserIsCurrentUser().stream().map(moodEntryMapper::toDto).toList();
     }
 }

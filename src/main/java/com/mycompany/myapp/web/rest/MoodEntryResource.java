@@ -60,6 +60,8 @@ public class MoodEntryResource {
         if (moodEntryDTO.getId() != null) {
             throw new BadRequestAlertException("A new moodEntry cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        // Clear user from DTO - it will be set automatically to current user in service
+        moodEntryDTO.setUser(null);
         moodEntryDTO = moodEntryService.save(moodEntryDTO);
         return ResponseEntity.created(new URI("/api/mood-entries/" + moodEntryDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, moodEntryDTO.getId().toString()))
@@ -136,24 +138,15 @@ public class MoodEntryResource {
     }
 
     /**
-     * {@code GET  /mood-entries} : get all the moodEntries.
+     * {@code GET  /mood-entries} : get all the moodEntries for the current user.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of moodEntries in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<MoodEntryDTO>> getAllMoodEntries(
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
-    ) {
-        LOG.debug("REST request to get a page of MoodEntries");
-        Page<MoodEntryDTO> page;
-        if (eagerload) {
-            page = moodEntryService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = moodEntryService.findAll(pageable);
-        }
+    public ResponseEntity<List<MoodEntryDTO>> getAllMoodEntries(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get a page of MoodEntries for current user");
+        Page<MoodEntryDTO> page = moodEntryService.findAllForCurrentUser(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

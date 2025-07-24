@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Fix the unique constraint on MoodEntry table to be composite (date, user_id) instead of just date.
+    -->
+    <changeSet id="20250722071333-3" author="jhipster">
+        <!-- Drop the incorrect unique constraint on just the date column -->
+        <dropUniqueConstraint tableName="mood_entry" constraintName="ux_mood_entry__date"/>
+        
+        <!-- Add the correct composite unique constraint on (date, user_id) -->
+        <addUniqueConstraint tableName="mood_entry" 
+                             columnNames="date,user_id" 
+                             constraintName="ux_mood_entry__date_user_id"/>
+    </changeSet>
+</databaseChangeLog> 

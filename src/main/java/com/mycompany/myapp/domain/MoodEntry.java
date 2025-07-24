@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * A MoodEntry.
  */
 @Entity
-@Table(name = "mood_entry")
+@Table(name = "mood_entry", uniqueConstraints = { @UniqueConstraint(columnNames = { "date", "user_id" }) })
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class MoodEntry implements Serializable {
 
@@ -22,7 +22,7 @@ public class MoodEntry implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "date", nullable = false, unique = true)
+    @Column(name = "date", nullable = false)
     private LocalDate date;
 
     @NotNull

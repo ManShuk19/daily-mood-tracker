@@ -1,0 +1,266 @@
+.mood-dashboard {
+  padding: 2rem 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+
+  .dashboard-title {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .dashboard-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 15px 15px 0 0 !important;
+      padding: 1.5rem;
+      font-weight: 500;
+
+      h4 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 500;
+      }
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+  }
+
+  .mood-entry-card {
+    .mood-selector {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .mood-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: white;
+      border: 3px solid #e9ecef;
+      border-radius: 15px;
+      padding: 1.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 100px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+      }
+
+      &.selected {
+        border-color: #667eea;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      }
+
+      .mood-emoji {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+
+      .mood-label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+    }
+  }
+
+  .mood-chart-card {
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .mood-stats {
+    .mood-stat-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+
+      .mood-stat-emoji {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+      }
+
+      .mood-stat-info {
+        flex: 1;
+
+        .mood-stat-mood {
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: #495057;
+        }
+
+        .mood-stat-count {
+          font-size: 0.8rem;
+          color: #6c757d;
+        }
+      }
+
+      .mood-stat-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        transition: width 0.3s ease;
+        border-radius: 0 0 10px 10px;
+      }
+    }
+  }
+
+  .recent-entries-card {
+    .recent-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e9ecef;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .recent-entry-date {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+      }
+
+      .recent-entry-mood {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .mood-emoji-small {
+          font-size: 1.2rem;
+        }
+
+        .mood-name {
+          font-size: 0.8rem;
+          color: #495057;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .dashboard-title {
+      font-size: 2rem;
+    }
+
+    .dashboard-subtitle {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .mood-selector {
+      gap: 0.5rem !important;
+
+      .mood-button {
+        min-width: 80px;
+        padding: 1rem 0.5rem;
+
+        .mood-emoji {
+          font-size: 2rem;
+        }
+
+        .mood-label {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    .card {
+      margin-bottom: 1.5rem;
+
+      .card-header {
+        padding: 1rem;
+
+        h4 {
+          font-size: 1.1rem;
+        }
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .mood-selector {
+      .mood-button {
+        min-width: 70px;
+        padding: 0.8rem 0.3rem;
+      }
+    }
+  }
+}
+
+// Alert improvements
+.alert {
+  border-radius: 10px;
+  border: none;
+
+  &.alert-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  &.alert-info {
+    background: linear-gradient(45deg, #17a2b8, #007bff);
+    color: white;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+  }
+}
