@@ -57,16 +57,20 @@ class MoodEntryServiceIT {
 
     public static MoodEntry createEntity(EntityManager em) {
         MoodEntry moodEntry = new MoodEntry().date(DEFAULT_DATE).mood(DEFAULT_MOOD);
-        // Add required User entity
-        User user;
-        if (TestUtil.findAll(em, User.class).isEmpty()) {
-            user = UserResourceIT.createEntity();
-            user.setLogin("testuser");
-            em.persist(user);
-            em.flush();
-        } else {
-            user = TestUtil.findAll(em, User.class).get(0);
-        }
+        // Add required User entity - always look for testuser specifically
+        User user = em
+            .createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+            .setParameter("login", "testuser")
+            .getResultList()
+            .stream()
+            .findFirst()
+            .orElseGet(() -> {
+                User newUser = UserResourceIT.createEntity();
+                newUser.setLogin("testuser");
+                em.persist(newUser);
+                em.flush();
+                return newUser;
+            });
         moodEntry.setUser(user);
         return moodEntry;
     }
@@ -91,10 +95,20 @@ class MoodEntryServiceIT {
 
     @BeforeEach
     public void initTest() {
-        user = UserResourceIT.createEntity();
-        user.setLogin("testuser");
-        em.persist(user);
-        em.flush();
+        // Find or create testuser
+        user = em
+            .createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+            .setParameter("login", "testuser")
+            .getResultList()
+            .stream()
+            .findFirst()
+            .orElseGet(() -> {
+                User newUser = UserResourceIT.createEntity();
+                newUser.setLogin("testuser");
+                em.persist(newUser);
+                em.flush();
+                return newUser;
+            });
 
         moodEntry = createEntity(em);
     }

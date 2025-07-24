@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(username = "admin")
 class MoodEntryResourceIT {
 
     private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
@@ -96,10 +96,20 @@ class MoodEntryResourceIT {
      */
     public static MoodEntry createEntity(EntityManager em) {
         MoodEntry moodEntry = new MoodEntry().date(DEFAULT_DATE).mood(DEFAULT_MOOD);
-        // Add required entity
-        User user = UserResourceIT.createEntity();
-        em.persist(user);
-        em.flush();
+        // Add required entity - create user with login "admin" to match @WithMockUser
+        User user = em
+            .createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+            .setParameter("login", "admin")
+            .getResultList()
+            .stream()
+            .findFirst()
+            .orElseGet(() -> {
+                User newUser = UserResourceIT.createEntity();
+                newUser.setLogin("admin");
+                em.persist(newUser);
+                em.flush();
+                return newUser;
+            });
         moodEntry.setUser(user);
         return moodEntry;
     }
@@ -112,10 +122,20 @@ class MoodEntryResourceIT {
      */
     public static MoodEntry createUpdatedEntity(EntityManager em) {
         MoodEntry updatedMoodEntry = new MoodEntry().date(UPDATED_DATE).mood(UPDATED_MOOD);
-        // Add required entity
-        User user = UserResourceIT.createEntity();
-        em.persist(user);
-        em.flush();
+        // Add required entity - create user with login "admin" to match @WithMockUser
+        User user = em
+            .createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+            .setParameter("login", "admin")
+            .getResultList()
+            .stream()
+            .findFirst()
+            .orElseGet(() -> {
+                User newUser = UserResourceIT.createEntity();
+                newUser.setLogin("admin");
+                em.persist(newUser);
+                em.flush();
+                return newUser;
+            });
         updatedMoodEntry.setUser(user);
         return updatedMoodEntry;
     }
