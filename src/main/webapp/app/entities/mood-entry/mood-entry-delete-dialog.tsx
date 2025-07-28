@@ -9,7 +9,6 @@ import { deleteEntity, getEntity } from './mood-entry.reducer';
 
 export const MoodEntryDeleteDialog = () => {
   const dispatch = useAppDispatch();
-
   const pageLocation = useLocation();
   const navigate = useNavigate();
   const { id } = useParams<'id'>();

@@ -17,7 +17,7 @@
     "enableTranslation": false,
     "entities": ["MoodEntry"],
     "feignClient": null,
-    "jhipsterVersion": "8.10.0",
+    "jhipsterVersion": "8.11.0",
     "jwtSecretKey": "OGIwNzk1MTRjODYwZmJiOGU1ZGVjMGE1NDBhZmU0MDllZmEwNTc5OWVkZGU3NjZmZWM2OTE2MTAyMTBiNmU3NjExNjEwYWJkMDgxZDA2MWUxNmZjZjk3MWM0ZWU2ZGU0ZGM1YTIwMzJhNDQxMWI3YTFkMDQxOGVmNTI0MjQxNTY=",
     "lastLiquibaseTimestamp": 1753168413000,
     "microfrontend": null,

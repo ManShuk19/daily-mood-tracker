@@ -1,6 +1,7 @@
 package com.mycompany.myapp.security.jwt;
 
-import static com.mycompany.myapp.security.SecurityUtils.AUTHORITIES_KEY;
+import static com.mycompany.myapp.security.AuthoritiesConstants.ADMIN;
+import static com.mycompany.myapp.security.SecurityUtils.AUTHORITIES_CLAIM;
 import static com.mycompany.myapp.security.SecurityUtils.JWT_ALGORITHM;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -48,7 +49,7 @@ public class JwtAuthenticationTestUtils {
             .issuedAt(now)
             .expiresAt(now.plusSeconds(60))
             .subject(user)
-            .claims(customClaim -> customClaim.put(AUTHORITIES_KEY, Collections.singletonList("ROLE_ADMIN")))
+            .claims(customClaim -> customClaim.put(AUTHORITIES_CLAIM, Collections.singletonList(ADMIN)))
             .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
