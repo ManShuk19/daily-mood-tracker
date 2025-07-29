@@ -187,12 +187,13 @@ class MoodEntryServiceIT {
         moodEntryRepository.saveAndFlush(anotherMoodEntry);
 
         // Get all mood entries for current user
-        List<MoodEntryDTO> result = moodEntryService.findAllForCurrentUser();
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<MoodEntryDTO> result = moodEntryService.findAllForCurrentUser(pageable);
 
         // Verify both entries are returned
-        assertThat(result).hasSize(2);
-        assertThat(result).extracting(MoodEntryDTO::getMood).containsExactlyInAnyOrder(DEFAULT_MOOD, UPDATED_MOOD);
-        assertThat(result).extracting(dto -> dto.getUser().getLogin()).allMatch("testuser"::equals);
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getContent()).extracting(MoodEntryDTO::getMood).containsExactlyInAnyOrder(DEFAULT_MOOD, UPDATED_MOOD);
+        assertThat(result.getContent()).extracting(dto -> dto.getUser().getLogin()).allMatch("testuser"::equals);
     }
 
     @Test

@@ -3,11 +3,14 @@ package com.mycompany.myapp.web.rest;
 import com.mycompany.myapp.repository.MoodEntryRepository;
 import com.mycompany.myapp.service.MoodEntryService;
 import com.mycompany.myapp.service.dto.MoodEntryDTO;
+import com.mycompany.myapp.service.dto.MoodStatisticsDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -156,6 +159,96 @@ public class MoodEntryResource {
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /mood-entries/my} : get all mood entries for the current user.
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of moodEntries in body.
+     */
+    @GetMapping("/my")
+    public ResponseEntity<List<MoodEntryDTO>> getMyMoodEntries(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get a page of MoodEntries for current user");
+        Page<MoodEntryDTO> page = moodEntryService.findAllForCurrentUser(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /mood-entries/my/date/{date}} : get mood entry for current user by date.
+     *
+     * @param date the date to search for.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the moodEntryDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/my/date/{date}")
+    public ResponseEntity<MoodEntryDTO> getMyMoodEntryByDate(@PathVariable("date") String date) {
+        LOG.debug("REST request to get MoodEntry for current user on date : {}", date);
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        Optional<MoodEntryDTO> moodEntryDTO = moodEntryService.findByCurrentUserAndDate(localDate);
+        return ResponseUtil.wrapOrNotFound(moodEntryDTO);
+    }
+
+    /**
+     * {@code GET  /mood-entries/my/range} : get mood entries for current user within date range.
+     *
+     * @param startDate the start date.
+     * @param endDate the end date.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of moodEntries in body.
+     */
+    @GetMapping("/my/range")
+    public ResponseEntity<List<MoodEntryDTO>> getMyMoodEntriesByDateRange(
+        @RequestParam("startDate") String startDate,
+        @RequestParam("endDate") String endDate
+    ) {
+        LOG.debug("REST request to get MoodEntries for current user between {} and {}", startDate, endDate);
+        LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        List<MoodEntryDTO> moodEntries = moodEntryService.findByCurrentUserAndDateBetween(start, end);
+        return ResponseEntity.ok().body(moodEntries);
+    }
+
+    /**
+     * {@code GET  /mood-entries/statistics} : get mood statistics for current user.
+     *
+     * @param startDate the start date for statistics.
+     * @param endDate the end date for statistics.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the moodStatisticsDTO.
+     */
+    @GetMapping("/statistics")
+    public ResponseEntity<MoodStatisticsDTO> getMoodStatistics(
+        @RequestParam("startDate") String startDate,
+        @RequestParam("endDate") String endDate
+    ) {
+        LOG.debug("REST request to get mood statistics between {} and {}", startDate, endDate);
+        LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        MoodStatisticsDTO statistics = moodEntryService.getMoodStatisticsForCurrentUser(start, end);
+        return ResponseEntity.ok().body(statistics);
+    }
+
+    /**
+     * {@code GET  /mood-entries/statistics/month} : get mood statistics for current user for current month.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the moodStatisticsDTO.
+     */
+    @GetMapping("/statistics/month")
+    public ResponseEntity<MoodStatisticsDTO> getMoodStatisticsForCurrentMonth() {
+        LOG.debug("REST request to get mood statistics for current month");
+        MoodStatisticsDTO statistics = moodEntryService.getMoodStatisticsForCurrentMonth();
+        return ResponseEntity.ok().body(statistics);
+    }
+
+    /**
+     * {@code GET  /mood-entries/statistics/week} : get mood statistics for current user for last week.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the moodStatisticsDTO.
+     */
+    @GetMapping("/statistics/week")
+    public ResponseEntity<MoodStatisticsDTO> getMoodStatisticsForLastWeek() {
+        LOG.debug("REST request to get mood statistics for last week");
+        MoodStatisticsDTO statistics = moodEntryService.getMoodStatisticsForLastWeek();
+        return ResponseEntity.ok().body(statistics);
     }
 
     /**

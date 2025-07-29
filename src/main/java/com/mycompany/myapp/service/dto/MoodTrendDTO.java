@@ -3,81 +3,71 @@ package com.mycompany.myapp.service.dto;
 import com.mycompany.myapp.domain.enumeration.MoodType;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
- * A DTO for the MoodTrend entity.
+ * A DTO for mood trends.
  */
 public class MoodTrendDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-    private List<MoodTrendDataPoint> dataPoints;
-    private String period;
-    private Integer totalDays;
+    private LocalDate date;
+    private MoodType mood;
+    private Integer moodScore;
 
-    public static class MoodTrendDataPoint implements Serializable {
+    public MoodTrendDTO() {
+        // Empty constructor needed for Jackson.
+    }
 
-        private LocalDate date;
-        private MoodType mood;
-        private Integer dayNumber;
+    public MoodTrendDTO(LocalDate date, MoodType mood) {
+        this.date = date;
+        this.mood = mood;
+        this.moodScore = getMoodScore(mood);
+    }
 
-        public LocalDate getDate() {
-            return date;
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public MoodType getMood() {
+        return mood;
+    }
+
+    public void setMood(MoodType mood) {
+        this.mood = mood;
+        this.moodScore = getMoodScore(mood);
+    }
+
+    public Integer getMoodScore() {
+        return moodScore;
+    }
+
+    public void setMoodScore(Integer moodScore) {
+        this.moodScore = moodScore;
+    }
+
+    private Integer getMoodScore(MoodType mood) {
+        if (mood == null) {
+            return 0;
         }
-
-        public void setDate(LocalDate date) {
-            this.date = date;
+        switch (mood) {
+            case HAPPY:
+                return 5;
+            case NEUTRAL:
+                return 3;
+            case ANXIOUS:
+                return 2;
+            case SAD:
+                return 1;
+            case ANGRY:
+                return 0;
+            default:
+                return 0;
         }
-
-        public MoodType getMood() {
-            return mood;
-        }
-
-        public void setMood(MoodType mood) {
-            this.mood = mood;
-        }
-
-        public Integer getDayNumber() {
-            return dayNumber;
-        }
-
-        public void setDayNumber(Integer dayNumber) {
-            this.dayNumber = dayNumber;
-        }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<MoodTrendDataPoint> getDataPoints() {
-        return dataPoints;
-    }
-
-    public void setDataPoints(List<MoodTrendDataPoint> dataPoints) {
-        this.dataPoints = dataPoints;
-    }
-
-    public String getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(String period) {
-        this.period = period;
-    }
-
-    public Integer getTotalDays() {
-        return totalDays;
-    }
-
-    public void setTotalDays(Integer totalDays) {
-        this.totalDays = totalDays;
     }
 
     @Override
@@ -89,22 +79,25 @@ public class MoodTrendDTO implements Serializable {
             return false;
         }
 
-        return getId() != null && getId().equals(((MoodTrendDTO) o).getId());
+        MoodTrendDTO moodTrendDTO = (MoodTrendDTO) o;
+        if (this.date == null) {
+            return false;
+        }
+        return date.equals(moodTrendDTO.date);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return date.hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
         return "MoodTrendDTO{" +
-            "id=" + getId() +
-            ", dataPoints=" + getDataPoints() +
-            ", period='" + getPeriod() + "'" +
-            ", totalDays=" + getTotalDays() +
+            "date='" + getDate() + "'" +
+            ", mood='" + getMood() + "'" +
+            ", moodScore=" + getMoodScore() +
             "}";
     }
 }

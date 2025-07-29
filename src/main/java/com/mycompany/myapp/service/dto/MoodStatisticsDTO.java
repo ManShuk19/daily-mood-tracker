@@ -2,94 +2,137 @@ package com.mycompany.myapp.service.dto;
 
 import com.mycompany.myapp.domain.enumeration.MoodType;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 /**
- * A DTO for the MoodStatistics entity.
+ * A DTO for mood statistics.
  */
 public class MoodStatisticsDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-    private Integer totalEntries;
-    private Integer happyCount;
-    private Integer sadCount;
-    private Integer angryCount;
-    private Integer neutralCount;
-    private Integer anxiousCount;
-    private MoodType mostCommonMood;
-    private String period;
+    private Long totalEntries;
+    private Map<MoodType, Long> moodDistribution;
+    private MoodType mostFrequentMood;
+    private Long mostFrequentMoodCount;
+    private Double averageMoodScore;
+    private List<MoodTrendDTO> trends;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Long currentStreak;
+    private MoodType currentStreakMood;
+    private Long longestStreak;
+    private MoodType longestStreakMood;
+    private Double trackingCompletionRate;
 
-    public Long getId() {
-        return id;
+    public MoodStatisticsDTO() {
+        // Empty constructor needed for Jackson.
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getTotalEntries() {
+    public Long getTotalEntries() {
         return totalEntries;
     }
 
-    public void setTotalEntries(Integer totalEntries) {
+    public void setTotalEntries(Long totalEntries) {
         this.totalEntries = totalEntries;
     }
 
-    public Integer getHappyCount() {
-        return happyCount;
+    public Map<MoodType, Long> getMoodDistribution() {
+        return moodDistribution;
     }
 
-    public void setHappyCount(Integer happyCount) {
-        this.happyCount = happyCount;
+    public void setMoodDistribution(Map<MoodType, Long> moodDistribution) {
+        this.moodDistribution = moodDistribution;
     }
 
-    public Integer getSadCount() {
-        return sadCount;
+    public MoodType getMostFrequentMood() {
+        return mostFrequentMood;
     }
 
-    public void setSadCount(Integer sadCount) {
-        this.sadCount = sadCount;
+    public void setMostFrequentMood(MoodType mostFrequentMood) {
+        this.mostFrequentMood = mostFrequentMood;
     }
 
-    public Integer getAngryCount() {
-        return angryCount;
+    public Long getMostFrequentMoodCount() {
+        return mostFrequentMoodCount;
     }
 
-    public void setAngryCount(Integer angryCount) {
-        this.angryCount = angryCount;
+    public void setMostFrequentMoodCount(Long mostFrequentMoodCount) {
+        this.mostFrequentMoodCount = mostFrequentMoodCount;
     }
 
-    public Integer getNeutralCount() {
-        return neutralCount;
+    public Double getAverageMoodScore() {
+        return averageMoodScore;
     }
 
-    public void setNeutralCount(Integer neutralCount) {
-        this.neutralCount = neutralCount;
+    public void setAverageMoodScore(Double averageMoodScore) {
+        this.averageMoodScore = averageMoodScore;
     }
 
-    public Integer getAnxiousCount() {
-        return anxiousCount;
+    public List<MoodTrendDTO> getTrends() {
+        return trends;
     }
 
-    public void setAnxiousCount(Integer anxiousCount) {
-        this.anxiousCount = anxiousCount;
+    public void setTrends(List<MoodTrendDTO> trends) {
+        this.trends = trends;
     }
 
-    public MoodType getMostCommonMood() {
-        return mostCommonMood;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setMostCommonMood(MoodType mostCommonMood) {
-        this.mostCommonMood = mostCommonMood;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public String getPeriod() {
-        return period;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setPeriod(String period) {
-        this.period = period;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getCurrentStreak() {
+        return currentStreak;
+    }
+
+    public void setCurrentStreak(Long currentStreak) {
+        this.currentStreak = currentStreak;
+    }
+
+    public MoodType getCurrentStreakMood() {
+        return currentStreakMood;
+    }
+
+    public void setCurrentStreakMood(MoodType currentStreakMood) {
+        this.currentStreakMood = currentStreakMood;
+    }
+
+    public Long getLongestStreak() {
+        return longestStreak;
+    }
+
+    public void setLongestStreak(Long longestStreak) {
+        this.longestStreak = longestStreak;
+    }
+
+    public MoodType getLongestStreakMood() {
+        return longestStreakMood;
+    }
+
+    public void setLongestStreakMood(MoodType longestStreakMood) {
+        this.longestStreakMood = longestStreakMood;
+    }
+
+    public Double getTrackingCompletionRate() {
+        return trackingCompletionRate;
+    }
+
+    public void setTrackingCompletionRate(Double trackingCompletionRate) {
+        this.trackingCompletionRate = trackingCompletionRate;
     }
 
     @Override
@@ -101,27 +144,34 @@ public class MoodStatisticsDTO implements Serializable {
             return false;
         }
 
-        return getId() != null && getId().equals(((MoodStatisticsDTO) o).getId());
+        MoodStatisticsDTO moodStatisticsDTO = (MoodStatisticsDTO) o;
+        if (this.totalEntries == null) {
+            return false;
+        }
+        return totalEntries.equals(moodStatisticsDTO.totalEntries);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return totalEntries.hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
         return "MoodStatisticsDTO{" +
-            "id=" + getId() +
-            ", totalEntries=" + getTotalEntries() +
-            ", happyCount=" + getHappyCount() +
-            ", sadCount=" + getSadCount() +
-            ", angryCount=" + getAngryCount() +
-            ", neutralCount=" + getNeutralCount() +
-            ", anxiousCount=" + getAnxiousCount() +
-            ", mostCommonMood='" + getMostCommonMood() + "'" +
-            ", period='" + getPeriod() + "'" +
+            "totalEntries=" + getTotalEntries() +
+            ", moodDistribution='" + getMoodDistribution() + "'" +
+            ", mostFrequentMood='" + getMostFrequentMood() + "'" +
+            ", mostFrequentMoodCount=" + getMostFrequentMoodCount() +
+            ", averageMoodScore=" + getAverageMoodScore() +
+            ", startDate='" + getStartDate() + "'" +
+            ", endDate='" + getEndDate() + "'" +
+            ", currentStreak=" + getCurrentStreak() +
+            ", currentStreakMood='" + getCurrentStreakMood() + "'" +
+            ", longestStreak=" + getLongestStreak() +
+            ", longestStreakMood='" + getLongestStreakMood() + "'" +
+            ", trackingCompletionRate=" + getTrackingCompletionRate() +
             "}";
     }
 }
